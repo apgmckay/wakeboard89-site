@@ -1,0 +1,9 @@
+# Wakeboard 1989: the website and its score API, as one Cloudflare Pages project
+name = "wakeboard89"
+pages_build_output_dir = "public"
+compatibility_date = "2025-01-01"
+
+[[d1_databases]]
+binding = "DB"
+database_name = "wakeboard89-scores"
+database_id = "PASTE-THE-DATABASE-ID-HERE"

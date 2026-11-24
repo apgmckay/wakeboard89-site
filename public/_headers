@@ -1,0 +1,5 @@
+# let the Android app (and anywhere else the game runs) stream music from here.
+# (the game always re-checks tracks.json when it loads, so new tracks show up straight away)
+/music/*
+  Access-Control-Allow-Origin: *
+  Cache-Control: public, max-age=3600
