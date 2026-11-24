@@ -6,4 +6,4 @@ compatibility_date = "2025-01-01"
 [[d1_databases]]
 binding = "DB"
 database_name = "wakeboard89-scores"
-database_id = "PASTE-THE-DATABASE-ID-HERE"
+database_id = "c78200f4-b171-4f3d-af10-9dae479731cf"
