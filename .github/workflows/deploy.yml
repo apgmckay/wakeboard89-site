@@ -1,0 +1,37 @@
+# Wakeboard 1989 — deploys the site, the scores API (Pages Functions) and the music to Cloudflare Pages
+# every time you push to main. Put this file at .github/workflows/deploy.yml in the repo.
+name: Deploy Wakeboard 1989
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:        # adds a "Run workflow" button on the Actions tab too
+
+concurrency: deploy         # never two deploys at once
+
+env:
+  PAGES_PROJECT: wakeboard89         # your Pages project's name, as it shows in the Cloudflare dashboard
+  D1_DATABASE: wakeboard89-scores    # must match database_name in wrangler.toml
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+
+      # makes sure the scores table is there. Harmless to run every time as long as schema.sql
+      # only uses CREATE TABLE IF NOT EXISTS / CREATE INDEX IF NOT EXISTS
+      - name: Scores database
+        uses: cloudflare/wrangler-action@v4
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          command: d1 execute ${{ env.D1_DATABASE }} --remote --file=schema.sql
+
+      # uploads public/ (game, music, tracks.json, _headers) and bundles functions/ (the /api/v1/scores endpoints)
+      - name: Site, API and music
+        uses: cloudflare/wrangler-action@v4
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          command: pages deploy public --project-name=${{ env.PAGES_PROJECT }} --branch=main
